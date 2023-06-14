@@ -1,3 +1,5 @@
 # OpenLibraryKit
 
-A description of this package.
+An implementation of the OpenLibrary APIs in Swift.
+
+See https://openlibrary.org/developers/api
