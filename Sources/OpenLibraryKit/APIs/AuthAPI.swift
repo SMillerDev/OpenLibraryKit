@@ -13,8 +13,12 @@ public struct AuthAPI {
     init(_ api: Api) {
         self.api = api
     }
-    
-    public func login(user: String, secret: String) -> Void {
+
+    public func login(user: String, secret: String) async throws -> String {
+        return try await loginCall(user: user, secret: secret)
+    }
+
+    private func loginCall(user: String, secret: String) async throws -> String {
         let url = URL(string: "https://openlibrary.org/account/login")!
         print("📲 POST Request to: \(url.absoluteString)")
         var request = URLRequest(url: url)
@@ -23,19 +27,15 @@ public struct AuthAPI {
         request.addValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
 
-        let session = URLSession.shared
-        let task = session.dataTask(with: request, completionHandler: { data,response,error in
-            guard error == nil else {
-                print(error!.localizedDescription)
-                return
-            }
-            if let response = response as? HTTPURLResponse, response.statusCode > 299 || response.statusCode < 199 {
-                print("NO!")
-            }
-            debugPrint(response)
-//            debugPrint(String(data: data!, encoding: .utf8))
-        })
+        let (_, response) = try await URLSession.shared.data(for: request)
+        if let response = response as? HTTPURLResponse, response.statusCode > 299 || response.statusCode < 199 {
+            throw AuthError.invalidCredentials
+        }
 
-        task.resume()
+        return user
     }
+}
+
+enum AuthError: Error {
+    case invalidCredentials
 }

@@ -14,69 +14,46 @@ public struct AuthorsAPI {
         self.api = api
     }
 
-    public func author(id: String, completion: @escaping (Author?) -> Void) -> Void {
-        api.request(path: "/authors/\(id).json", completion: { data, response, error -> Void in
-            if error != nil, data == nil {
-                completion(nil)
-            }
-
-            do {
-                let json = try JSONDecoder().decode(Author.self, from: data!)
-                completion(json)
-            } catch {
-                print("Failed to decode data. Error: \(error)")
-                completion(nil)
-            }
+    public func author(id: String) async throws -> Author {
+        try await withCheckedThrowingContinuation({ continuation in
+            api.request(path: "/authors/\(id).json", type: Author.self, completion: { result in
+                continuation.resume(with: result)
+            })
         })
     }
 
-    public func works(id: String, completion: @escaping (Array<AuthorWork>?) -> Void) -> Void {
-        api.request(path: "/authors/\(id)/works.json", completion: { data, response, error -> Void in
-            if error != nil, data == nil {
-                completion(nil)
-            }
-
-            do {
-                let json = try JSONDecoder().decode(AuthorWorks.self, from: data!)
-                completion(json.entries)
-            } catch {
-                print("Failed to decode data. Error: \(error)")
-                completion(nil)
-            }
+    public func works(id: String) async throws -> [AuthorWork] {
+        try await withCheckedThrowingContinuation({ continuation in
+            api.request(path: "/authors/\(id)/works.json", type: AuthorWorks.self, completion: { result in
+                switch result {
+                case .success(let json):
+                    continuation.resume(returning: json.entries)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            })
         })
     }
 
-    public func search(query: String, completion: @escaping (Array<AuthorSearchResult>) -> Void) -> Void {
-        let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        api.request(path: "/search/authors.json?q=\(encodedQuery)", completion: { data, response, error -> Void in
-            if error != nil, data == nil {
-                completion([])
-            }
-
-            do {
-                let json = try JSONDecoder().decode(AuthorSearch.self, from: data!)
-                completion(json.docs)
-            } catch {
-                print("Failed to decode data. Error: \(error)")
-                completion([])
-            }
+    public func search(query: String) async throws -> [AuthorSearchResult] {
+        try await withCheckedThrowingContinuation({ continuation in
+            let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            api.request(path: "/search/authors.json?q=\(encodedQuery)", type: AuthorSearch.self, completion: { result in
+                switch result {
+                case .success(let json):
+                    continuation.resume(returning: json.docs)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            })
         })
     }
 
-    public func image(id: String, completion: @escaping (Cover?) -> Void) -> Void {
-        api.request(path: "/a/olid/\(id).json", prefix: "covers.", completion: { data, response, error -> Void in
-            if error != nil, data == nil {
-                completion(nil)
-            }
-
-            do {
-                let json = try JSONDecoder().decode(Cover.self, from: data!)
-                completion(json)
-            } catch {
-                print("Failed to decode data. Error: \(error)")
-                completion(nil)
-            }
+    public func image(id: String) async throws -> Cover {
+        try await withCheckedThrowingContinuation({ continuation in
+            api.request(path: "/a/olid/\(id).json", prefix: "covers.", type: Cover.self, completion: { result in
+                continuation.resume(with: result)
+            })
         })
     }
 }
-

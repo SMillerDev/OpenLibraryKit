@@ -14,131 +14,72 @@ public struct BooksAPI {
         self.api = api
     }
 
-    public func work(id: String, completion: @escaping (Work?) -> Void) -> Void {
-        api.request(path: "/works/\(id).json", completion: { data, response, error -> Void in
-            if error != nil, data == nil {
-                completion(nil)
-            }
-
-            do {
-                let json = try JSONDecoder().decode(Work.self, from: data!)
-                completion(json)
-            } catch {
-                print("Failed to decode data. Error: \(error)")
-                completion(nil)
-            }
+    public func work(id: String) async throws -> Work {
+        return try await withCheckedThrowingContinuation({ continuation in
+            api.request(path: "/works/\(id).json", type: Work.self, completion: { result in
+                continuation.resume(with: result)
+            })
         })
     }
 
-    public func edition(isbn: String, completion: @escaping (Edition?) -> Void) -> Void {
-        api.request(path: "/isbn/\(isbn).json", completion: { data, response, error -> Void in
-            if error != nil, data == nil {
-                completion(nil)
-            }
-
-            do {
-                let json = try JSONDecoder().decode(Edition.self, from: data!)
-                completion(json)
-            } catch {
-                print("Failed to decode data. Error: \(error)")
-                completion(nil)
-            }
+    public func edition(isbn: String) async throws -> Edition {
+        return try await withCheckedThrowingContinuation({ continuation in
+            api.request(path: "/isbn/\(isbn).json", type: Edition.self, completion: { result in
+                continuation.resume(with: result)
+            })
         })
     }
 
-    public func edition(id: String, completion: @escaping (Edition?) -> Void) -> Void {
-        api.request(path: "/books/\(id).json", completion: { data, response, error -> Void in
-            if error != nil, data == nil {
-                completion(nil)
-            }
-
-            do {
-                let json = try JSONDecoder().decode(Edition.self, from: data!)
-                completion(json)
-            } catch {
-                print("Failed to decode data. Error: \(error)")
-                completion(nil)
-            }
+    public func edition(id: String) async throws -> Edition {
+        return try await withCheckedThrowingContinuation({ continuation in
+            api.request(path: "/books/\(id).json", type: Edition.self, completion: { result in
+                continuation.resume(with: result)
+            })
         })
     }
 
-    public func editions(id: String, completion: @escaping (Array<EditionsEntry>?) -> Void) -> Void {
-        api.request(path: "/works/\(id)/editions.json?limit=1000", completion: { data, response, error -> Void in
-            if error != nil, data == nil {
-                completion(nil)
-            }
-
-            do {
-                let json = try JSONDecoder().decode(Editions.self, from: data!)
-                completion(json.entries)
-            } catch {
-                print("Failed to decode data. Error: \(error)")
-                completion(nil)
-            }
+    public func editions(id: String) async throws -> [EditionsEntry] {
+        return try await withCheckedThrowingContinuation({ continuation in
+            api.request(path: "/works/\(id)/editions.json?limit=1000", type: Editions.self, completion: { result in
+                switch result {
+                case .success(let json):
+                    continuation.resume(returning: json.entries)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            })
         })
     }
 
-    public func ratings(id: String, completion: @escaping (BookRating?) -> Void) -> Void {
-        api.request(path: "/works/\(id)/ratings.json", completion: { data, response, error -> Void in
-            if error != nil, data == nil {
-                completion(nil)
-            }
-
-            do {
-                let json = try JSONDecoder().decode(BookRating.self, from: data!)
-                completion(json)
-            } catch {
-                print("Failed to decode data. Error: \(error)")
-                completion(nil)
-            }
+    public func ratings(id: String) async throws -> BookRating {
+        return try await withCheckedThrowingContinuation({ continuation in
+        api.request(path: "/works/\(id)/ratings.json", type: BookRating.self, completion: { result in
+            continuation.resume(with: result)
+        })
         })
     }
 
-    public func shelves(id: String, completion: @escaping (BookShelves?) -> Void) -> Void {
-        api.request(path: "/works/\(id)/bookshelves.json", completion: { data, response, error -> Void in
-            if error != nil, data == nil {
-                completion(nil)
-            }
-
-            do {
-                let json = try JSONDecoder().decode(BookShelves.self, from: data!)
-                completion(json)
-            } catch {
-                print("Failed to decode data. Error: \(error)")
-                completion(nil)
-            }
+    public func shelves(id: String) async throws -> BookShelves {
+        return try await withCheckedThrowingContinuation({ continuation in
+        api.request(path: "/works/\(id)/bookshelves.json", type: BookShelves.self, completion: { result in
+            continuation.resume(with: result)
+        })
         })
     }
 
-    public func image(id: String, completion: @escaping (Cover?) -> Void) -> Void {
-        api.request(path: "/b/olid/\(id).json", prefix: "covers.", completion: { data, response, error -> Void in
-            if error != nil, data == nil {
-                completion(nil)
-            }
-
-            do {
-                let json = try JSONDecoder().decode(Cover.self, from: data!)
-                completion(json)
-            } catch {
-                print("Failed to decode data. Error: \(error)")
-                completion(nil)
-            }
+    public func image(id: String) async throws -> Cover {
+        return try await withCheckedThrowingContinuation({ continuation in
+            api.request(path: "/b/olid/\(id).json", prefix: "covers.", type: Cover.self, completion: { result in
+                continuation.resume(with: result)
+            })
         })
     }
 
-    public func image(isbn: String, completion: @escaping (Cover?) -> Void) -> Void {
-        api.request(path: "/b/isbn/\(isbn).json", prefix: "covers.", completion: { data, response, error -> Void in
-            if error != nil, data == nil {
-                completion(nil)
-            }
-
-            do {
-                let json = try JSONDecoder().decode(Cover.self, from: data!)
-                completion(json)
-            } catch {
-                print("Failed to decode data. Error: \(error)")
-                completion(nil)
-            }
+    public func image(isbn: String) async throws -> Cover {
+        return try await withCheckedThrowingContinuation({ continuation in
+            api.request(path: "/b/isbn/\(isbn).json", prefix: "covers.", type: Cover.self, completion: { result in
+                continuation.resume(with: result)
+            })
         })
     }
 }

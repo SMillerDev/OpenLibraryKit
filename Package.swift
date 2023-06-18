@@ -5,11 +5,16 @@ import PackageDescription
 
 let package = Package(
     name: "OpenLibraryKit",
+    platforms: [
+        .macOS(.v11),
+        .iOS(.v14),
+        .tvOS(.v14)
+    ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "OpenLibraryKit",
-            targets: ["OpenLibraryKit"]),
+            targets: ["OpenLibraryKit"])
     ],
     dependencies: [
     ],
@@ -19,6 +24,6 @@ let package = Package(
             dependencies: []),
         .testTarget(
             name: "OpenLibraryKitTests",
-            dependencies: ["OpenLibraryKit"]),
+            dependencies: ["OpenLibraryKit"])
     ]
 )

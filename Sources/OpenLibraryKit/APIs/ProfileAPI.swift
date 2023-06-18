@@ -13,24 +13,12 @@ public struct ProfileAPI {
     init(_ api: Api) {
         self.api = api
     }
-    
-    public func get(user: String? = nil, completion: @escaping (Profile?) -> Void) -> Void {
-        guard let username = user else {
-            return
-        }
-        
-        api.request(path: "/people/\(username).json", completion: { data, response, error -> Void in
-            if error != nil, data == nil {
-                completion(nil)
-            }
 
-            do {
-                let json = try JSONDecoder().decode(Profile.self, from: data!)
-                completion(json)
-            } catch {
-                print("Failed to decode data. Error: \(error)")
-                completion(nil)
-            }
+    public func get(user: String) async throws -> Profile {
+        return try await withCheckedThrowingContinuation({ continuation in
+            api.request(path: "/people/\(user).json", type: Profile.self, completion: { result in
+                continuation.resume(with: result)
+            })
         })
     }
 }

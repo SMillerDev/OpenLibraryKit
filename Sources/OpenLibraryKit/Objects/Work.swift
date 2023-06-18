@@ -43,7 +43,6 @@ struct WorkAuthor: Codable {
     let author: TypeClass
 }
 
-
 // MARK: - Edition
 public struct Edition: Codable {
     let notes: String?
@@ -130,7 +129,6 @@ struct TableOfContent: Codable {
     let level: Int
     let label, title, pagenum: String
 }
-
 
 // MARK: - Classifications
 struct Classifications: Codable {

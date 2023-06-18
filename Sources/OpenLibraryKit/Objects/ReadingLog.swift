@@ -20,8 +20,9 @@ public struct ReadingLog: Codable {
 
 // MARK: - ReadingLogEntry
 public struct ReadingLogEntry: Codable {
-    let work: ReadingLogWork
-    let loggedEdition, loggedDate: String?
+    public let work: ReadingLogWork
+    public let loggedEdition: String?
+    public let loggedDate: String?
 
     enum CodingKeys: String, CodingKey {
         case work
@@ -31,14 +32,17 @@ public struct ReadingLogEntry: Codable {
 }
 
 // MARK: - Work
-struct ReadingLogWork: Codable {
-    let title, key: String
-    let authorKeys, authorNames: [String]
-    let firstPublishYear: Int
+public struct ReadingLogWork: Codable {
+    public let title: String
+    public let authorNames: [String]
+    public let firstPublishYear: Int
+    public let coverID: Int?
+    public let coverEditionKey: String?
+    public let authorKeys: [String]
+
+    public let key: String
     let lendingEditionS: String?
     let editionKey: [String]
-    let coverID: Int?
-    let coverEditionKey: String?
 
     enum CodingKeys: String, CodingKey {
         case title, key

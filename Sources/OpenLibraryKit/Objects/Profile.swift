@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 // MARK: - Profile
 public struct Profile: Codable {
     let key: String

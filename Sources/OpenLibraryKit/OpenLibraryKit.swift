@@ -2,7 +2,7 @@ import Foundation
 
 public struct OpenLibraryKit {
     let apiLib: Api
-    init() {
+    public init() {
         apiLib = Api()
     }
 

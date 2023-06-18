@@ -51,7 +51,6 @@ public struct AuthorWork: Codable {
     }
 }
 
-
 // MARK: - Links
 struct Links: Codable {
     let linksSelf, author, next: String
@@ -77,7 +76,6 @@ enum TypeEnum: String, Codable {
     case typeText = "/type/text"
 }
 
-
 // MARK: - Excerpt
 struct Excerpt: Codable {
     let excerpt: String
@@ -91,24 +89,29 @@ enum Description: Codable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        if let x = try? container.decode(String.self) {
-            self = .string(x)
+        if let value = try? container.decode(String.self) {
+            self = .string(value)
             return
         }
-        if let x = try? container.decode(Value.self) {
-            self = .created(x)
+        if let value = try? container.decode(Value.self) {
+            self = .created(value)
             return
         }
-        throw DecodingError.typeMismatch(Description.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for Description"))
+        throw DecodingError.typeMismatch(Description.self,
+                                         DecodingError.Context(
+                                            codingPath: decoder.codingPath,
+                                            debugDescription: "Wrong type for Description"
+                                         )
+        )
     }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
-        case .created(let x):
-            try container.encode(x)
-        case .string(let x):
-            try container.encode(x)
+        case .created(let value):
+            try container.encode(value)
+        case .string(let value):
+            try container.encode(value)
         }
     }
 }

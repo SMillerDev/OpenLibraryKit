@@ -9,22 +9,27 @@ import Foundation
 
 // MARK: - Cover
 public struct Cover: Codable {
-    let id, categoryID: Int
-    let olid, filename: String
+    let coverId: Int
+    let categoryID: Int
+    let olid: String
+    let filename: String
     let author: String?
-    let ip: String
-    let source, sourceURL: String?
+    let sourceIp: String
+    let source: String?
+    public let sourceURL: String?
     let isbn: String?
-    let created, lastModified: String
+    let created: String
+    let lastModified: String
     let archived, deleted: Bool
     let width, height: Int?
     let filenameS, filenameM, filenameL: String
     let isbn13: String?
 
     enum CodingKeys: String, CodingKey {
-        case id
+        case coverId = "id"
+        case sourceIp = "ip"
         case categoryID = "category_id"
-        case olid, filename, author, ip
+        case olid, filename, author
         case sourceURL = "source_url"
         case source, isbn, created
         case lastModified = "last_modified"
