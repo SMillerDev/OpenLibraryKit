@@ -14,10 +14,17 @@ public struct SearchAPI {
         self.api = api
     }
 
-    public func author(id: String) async throws -> Author {
+    public func search(_ query: String) async throws -> [SearchResult] {
         return try await withCheckedThrowingContinuation({ continuation in
-            api.request(path: "/authors/\(id).json", type: Author.self, completion: { result in
-                continuation.resume(with: result)
+            let encodedQuery = query.replacingOccurrences(of: " ", with: "+")
+                                    .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            api.request(path: "/search.json?q=\(encodedQuery)", type: SearchResults.self, completion: { result in
+                switch result {
+                case .success(let json):
+                    continuation.resume(returning: json.docs)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
             })
         })
     }

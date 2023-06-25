@@ -14,11 +14,20 @@ public struct ReadAPI {
         self.api = api
     }
 
-    public func author(id: String) async throws -> Author {
+    public func fetch(id: String, type: ReadableType) async throws -> ReadingResults {
         return try await withCheckedThrowingContinuation({ continuation in
-            api.request(path: "/authors/\(id).json", type: Author.self, completion: { result in
+            api.request(path: "/api/volumes/brief/\(type.rawValue)/\(id).json",
+                        type: ReadingResults.self,
+                        completion: { result in
                 continuation.resume(with: result)
             })
         })
     }
+}
+
+public enum ReadableType: String {
+    case isbn = "isbn"
+    case openLibraryId = "olid"
+    case oclc = "oclc"
+    case libraryOfCongressControl = "lccn"
 }

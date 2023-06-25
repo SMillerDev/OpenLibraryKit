@@ -14,9 +14,15 @@ public struct SubjectsAPI {
         self.api = api
     }
 
-    public func author(id: String) async throws -> Author {
+    public func subject(_ subject: String,
+                        publishedLowestYear: String? = nil,
+                        publishedHighestYear: String? = nil) async throws -> Subject {
+        var params = ""
+        if publishedLowestYear != nil && publishedHighestYear != nil {
+            params = "?published_in=\(publishedLowestYear!)-\(publishedHighestYear!)"
+        }
         return try await withCheckedThrowingContinuation({ continuation in
-            api.request(path: "/authors/\(id).json", type: Author.self, completion: { result in
+            api.request(path: "/subjects/\(subject).json\(params)", type: Subject.self, completion: { result in
                 continuation.resume(with: result)
             })
         })

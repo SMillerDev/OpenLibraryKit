@@ -12,6 +12,10 @@ public struct MyBooksAPI {
 
     init(_ api: Api) {
         self.api = api
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy/MM/dd, HH:mm:ss"
+        self.api.decoder.dateDecodingStrategy = .formatted(dateFormatter)
     }
 
     public func wanted(user: String) async throws -> [ReadingLogEntry] {

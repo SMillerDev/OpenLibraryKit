@@ -22,7 +22,7 @@ public struct ReadingLog: Codable {
 public struct ReadingLogEntry: Codable {
     public let work: ReadingLogWork
     public let loggedEdition: String?
-    public let loggedDate: String?
+    public let loggedDate: Date?
 
     enum CodingKeys: String, CodingKey {
         case work

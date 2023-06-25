@@ -35,7 +35,7 @@ public struct AuthorsAPI {
         })
     }
 
-    public func search(query: String) async throws -> [AuthorSearchResult] {
+    public func search(_ query: String) async throws -> [AuthorSearchResult] {
         try await withCheckedThrowingContinuation({ continuation in
             let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
             api.request(path: "/search/authors.json?q=\(encodedQuery)", type: AuthorSearch.self, completion: { result in

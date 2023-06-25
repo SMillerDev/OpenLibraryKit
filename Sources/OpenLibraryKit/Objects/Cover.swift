@@ -16,7 +16,7 @@ public struct Cover: Codable {
     let author: String?
     let sourceIp: String
     let source: String?
-    public let sourceURL: String?
+    public let sourceURL: URL?
     let isbn: String?
     let created: String
     let lastModified: String

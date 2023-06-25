@@ -13,7 +13,7 @@ public struct Work: Codable {
     let links: [Link] = []
     let title: String
     let covers: [Int]
-    let firstSentence: Value?
+    let firstSentence: StringValue?
     let subjectPlaces: [String] = []
     let firstPublishDate: String?
     let subjectPeople: [String] = []
@@ -23,7 +23,7 @@ public struct Work: Codable {
     let subjects: [String]
     let location: String
     let latestRevision, revision: Int
-    let created, lastModified: Value
+    let created, lastModified: DateValue
 
     enum CodingKeys: String, CodingKey {
         case description, links, title, covers
@@ -77,7 +77,7 @@ public struct Edition: Codable {
     let classifications: Classifications
     let deweyDecimalClass: [String]?
     let latestRevision, revision: Int
-    let created, lastModified: Value
+    let created, lastModified: DateValue
 
     enum CodingKeys: String, CodingKey {
         case notes, title, subtitle, authors
@@ -157,7 +157,7 @@ public struct EditionsEntry: Codable {
     let works: [TypeClass]
     let key: String
     let latestRevision, revision: Int
-    let created, lastModified: Value
+    let created, lastModified: DateValue
     let identifiers: Identifiers?
     let localID: [String]?
     let numberOfPages: Int?

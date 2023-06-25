@@ -53,18 +53,44 @@ public struct BooksAPI {
 
     public func ratings(id: String) async throws -> BookRating {
         return try await withCheckedThrowingContinuation({ continuation in
-        api.request(path: "/works/\(id)/ratings.json", type: BookRating.self, completion: { result in
-            continuation.resume(with: result)
+            api.request(path: "/works/\(id)/ratings.json", type: BookRating.self, completion: { result in
+                continuation.resume(with: result)
+            })
         })
+    }
+
+    public func setRating(id: String, rating: Int) async throws -> BookRating {
+        if rating > 5 || rating < 1 {
+            throw HttpError.clientError("Invalid rating")
+        }
+
+        let ratingRequest: RatingRequest = RatingRequest(editionId: id, rating: rating)
+
+        return try await withCheckedThrowingContinuation({ continuation in
+            api.request(path: "/works/\(id)/ratings.json",
+                        type: BookRating.self,
+                        method: .post,
+                        data: try? JSONEncoder().encode(ratingRequest),
+                        completion: { result in
+                continuation.resume(with: result)
+            })
         })
     }
 
     public func shelves(id: String) async throws -> BookShelves {
         return try await withCheckedThrowingContinuation({ continuation in
-        api.request(path: "/works/\(id)/bookshelves.json", type: BookShelves.self, completion: { result in
-            continuation.resume(with: result)
+            api.request(path: "/works/\(id)/bookshelves.json", type: BookShelves.self, completion: { result in
+                continuation.resume(with: result)
+            })
         })
-        })
+    }
+
+    public func setShelve(id: String, shelf: BookShelveId) async throws {
+        throw HttpError.notImplemented
+    }
+
+    public func removeShelve(id: String, shelf: BookShelveId) async throws {
+        throw HttpError.notImplemented
     }
 
     public func image(id: String) async throws -> Cover {
@@ -82,4 +108,17 @@ public struct BooksAPI {
             })
         })
     }
+}
+
+public enum BookShelveId: Int {
+    case wantToRead = 1
+    case reading = 2
+    case read = 3
+}
+
+public struct RatingRequest: Encodable {
+    let editionId: String
+    let rating: Int
+    let redir: Bool = false
+    let ajax: Bool = false
 }

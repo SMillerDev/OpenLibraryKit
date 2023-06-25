@@ -18,12 +18,12 @@ public struct Author: Codable {
     let wikipedia: String?
     let sourceRecords: [String]
     let fullerName: String?
-    let birthDate: String
-    let bio: Value
+    let birthDate: String?
+    let bio: StringValue
     let remoteIDS: RemoteIDS
     let personalName: String
     let latestRevision, revision: Int
-    let created, lastModified: Value
+    let created, lastModified: StringValue
 
     enum CodingKeys: String, CodingKey {
         case entityType = "entity_type"
@@ -42,12 +42,6 @@ public struct Author: Codable {
     }
 }
 
-// MARK: - Link
-struct Link: Codable {
-    let title: String?
-    let url: String
-}
-
 // MARK: - RemoteIDS
 struct RemoteIDS: Codable {
     let wikidata, isni, goodreads, viaf, librarything, amazon: String?
@@ -64,11 +58,12 @@ public struct AuthorSearch: Codable {
 public struct AuthorSearchResult: Codable {
     let key: String
     let name: String
-    let alternateNames: [String]?
-    let birthDate, deathDate, topWork: String?
+    let birthDate: String?
+    let deathDate: String?
+    let topWork: String?
     let workCount: Int
+    let alternateNames: [String]?
     let topSubjects: [String]?
-    let version: Double
 
     enum CodingKeys: String, CodingKey {
         case key, name
@@ -78,6 +73,5 @@ public struct AuthorSearchResult: Codable {
         case topWork = "top_work"
         case workCount = "work_count"
         case topSubjects = "top_subjects"
-        case version = "_version_"
     }
 }

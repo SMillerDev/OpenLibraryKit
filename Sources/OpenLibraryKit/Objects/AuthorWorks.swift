@@ -21,13 +21,13 @@ public struct AuthorWork: Codable {
     let authors: [AuthorItem]
     let key: String
     let latestRevision, revision: Int
-    let created, lastModified: Value
+    let created, lastModified: DateValue
     let covers: [Int]?
     let description: Description?
     let subjectPlaces: [String]?
     let firstPublishDate: String?
     let subjectPeople, subjectTimes, subjects: [String]?
-    let firstSentence: Value?
+    let firstSentence: StringValue?
     let excerpts: [Excerpt]?
     let links: [Link]?
     let location: String?
@@ -53,7 +53,9 @@ public struct AuthorWork: Codable {
 
 // MARK: - Links
 struct Links: Codable {
-    let linksSelf, author, next: String
+    let linksSelf: String
+    let next: String?
+    let author: String?
 
     enum CodingKeys: String, CodingKey {
         case linksSelf = "self"
@@ -66,16 +68,6 @@ struct AuthorItem: Codable {
     let type, author: TypeClass
 }
 
-// MARK: - TypeClass
-struct TypeClass: Codable {
-    let key: String
-}
-
-enum TypeEnum: String, Codable {
-    case typeDatetime = "/type/datetime"
-    case typeText = "/type/text"
-}
-
 // MARK: - Excerpt
 struct Excerpt: Codable {
     let excerpt: String
@@ -84,7 +76,7 @@ struct Excerpt: Codable {
 }
 
 enum Description: Codable {
-    case created(Value)
+    case created(StringValue)
     case string(String)
 
     init(from decoder: Decoder) throws {
@@ -93,7 +85,7 @@ enum Description: Codable {
             self = .string(value)
             return
         }
-        if let value = try? container.decode(Value.self) {
+        if let value = try? container.decode(StringValue.self) {
             self = .created(value)
             return
         }

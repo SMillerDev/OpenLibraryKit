@@ -14,9 +14,16 @@ public struct SearchContentAPI {
         self.api = api
     }
 
-    public func author(id: String) async throws -> Author {
+    public func search(_ query: String,
+                       itemId: String,
+                       path: String,
+                       dataNode: String = "ia800204") async throws -> ContentSearchResult {
+        let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         return try await withCheckedThrowingContinuation({ continuation in
-            api.request(path: "/authors/\(id).json", type: Author.self, completion: { result in
+            let params = "item_id=\(itemId)&doc=\(itemId)&path=\(path)&q=\(encodedQuery)"
+            api.request(url: "https://\(dataNode).us.archive.org/fulltext/inside.php?\(params)",
+                        type: ContentSearchResult.self,
+                        completion: { result in
                 continuation.resume(with: result)
             })
         })

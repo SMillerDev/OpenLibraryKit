@@ -33,7 +33,7 @@ final class OpenLibraryKitTests: XCTestCase {
     }
 
     func testAuthorSearch() async throws {
-        let list = try await OpenLibraryKit().author().search(query: "Douglas Adams")
+        let list = try await OpenLibraryKit().author().search("Douglas Adams")
         XCTAssertFalse(list.isEmpty)
         XCTAssertEqual(list.first?.key, "OL272947A")
     }
@@ -87,4 +87,56 @@ final class OpenLibraryKitTests: XCTestCase {
         let login = try await OpenLibraryKit().auth().login(user: "sean", secret: "test")
         XCTAssertEqual(login, "sean")
     }
+
+    func testListsForUser() async throws {
+        let list = try await OpenLibraryKit().lists().listFor(user: "george08")
+        XCTAssertFalse(list.isEmpty)
+        XCTAssertEqual(list.first?.name, "Museum in a Box")
+    }
+
+    func testListsForSubject() async throws {
+        let list = try await OpenLibraryKit().lists().listFor(subject: .works, id: "OL8721462W")
+        XCTAssertFalse(list.isEmpty)
+        XCTAssertEqual(list.first?.name, "picks")
+    }
+
+    func testList() async throws {
+        let list = try await OpenLibraryKit().lists().single(user: "george08", id: "OL97L")
+        XCTAssertEqual(list.name, "Time Travel")
+    }
+
+    func testListsSearch() async throws {
+        let list = try await OpenLibraryKit().lists().search("book")
+        XCTAssertFalse(list.isEmpty)
+        XCTAssertEqual(list.first?.name, "book")
+    }
+
+    func testRecentChanges() async throws {
+        let list = try await OpenLibraryKit().recentChanges().changes(type: .addBook)
+        XCTAssertFalse(list.isEmpty)
+        XCTAssertEqual(list.first?.kind, ChangesType.addBook.rawValue)
+    }
+
+    func testSubject() async throws {
+        let item = try await OpenLibraryKit().subjects().subject("love")
+        XCTAssertEqual(item.name, "love")
+    }
+
+    func testRead() async throws {
+        let item = try await OpenLibraryKit().read().fetch(id: "7532754685", type: .isbn)
+        XCTAssertFalse(item.records.isEmpty)
+        XCTAssertFalse(item.items.isEmpty)
+    }
+
+    func testSearch() async throws {
+        let list = try await OpenLibraryKit().search().search("Lord of the Rings")
+        XCTAssertFalse(list.isEmpty)
+    }
+
+    func testSearchContent() async throws {
+        throw XCTSkip("Not supported yet!")
+        let search = try await OpenLibraryKit().searchContent().search("Test", itemId: "a", path: "/b")
+        XCTAssertEqual(search.ia, "love")
+    }
+
 }
