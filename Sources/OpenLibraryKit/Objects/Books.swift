@@ -8,26 +8,26 @@
 import Foundation
 
 // MARK: - Summary
-struct Summary: Codable {
-    let average: Double
-    let count: Int
-    let sortable: Double
+public struct Summary: Codable {
+    public let average: Double?
+    public let count: Int
+    public let sortable: Double?
 }
 
 // MARK: - BookRating
 public struct BookRating: Codable {
-    let summary: Summary
-    let counts: [String: Int]
+    public let summary: Summary?
+    public let counts: [String: Int]
 }
 
 // MARK: - BookShelves
 public struct BookShelves: Codable {
-    let counts: Counts
+    public let counts: Counts
 }
 
 // MARK: - Counts
-struct Counts: Codable {
-    let wantToRead, currentlyReading, alreadyRead: Int
+public struct Counts: Codable {
+    public let wantToRead, currentlyReading, alreadyRead: Int
 
     enum CodingKeys: String, CodingKey {
         case wantToRead = "want_to_read"

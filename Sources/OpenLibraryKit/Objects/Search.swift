@@ -27,15 +27,15 @@ public struct SearchResults: Codable {
     }
 }
 
-public struct SearchResult: Codable {
-    let title: String
-    let key: String
-    let authors: [String]?
-    let authorKeys: [String]?
-    let editionCount: Int
-    let coverId: Int?
-    let fullText: Bool
-    let publicScan: Bool
+public struct SearchResult: OpenLibraryObject {
+    public let title: String
+    public let key: OpenLibraryKey
+    public let authors: [String]?
+    public let authorKeys: [String]?
+    public let editionCount: Int
+    public let coverId: Int?
+    public let fullText: Bool
+    public let publicScan: Bool
 
     enum CodingKeys: String, CodingKey {
         case key, title

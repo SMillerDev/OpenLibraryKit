@@ -20,7 +20,7 @@ public struct Cover: Codable {
     let isbn: String?
     let created: String
     let lastModified: String
-    let archived, deleted: Bool
+    let archived: Bool
     let width, height: Int?
     let filenameS, filenameM, filenameL: String
     let isbn13: String?
@@ -33,7 +33,7 @@ public struct Cover: Codable {
         case sourceURL = "source_url"
         case source, isbn, created
         case lastModified = "last_modified"
-        case archived, deleted, width, height
+        case archived, width, height
         case filenameS = "filename_s"
         case filenameM = "filename_m"
         case filenameL = "filename_l"

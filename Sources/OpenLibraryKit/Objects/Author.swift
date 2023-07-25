@@ -8,15 +8,16 @@
 import Foundation
 
 // MARK: - Author
-public struct Author: Codable {
+public struct Author: OpenLibraryObject {
+    public let key: OpenLibraryKey
     let entityType: String?
     let photos: [Int]
-    let links: [Link]
+    let links: [LinkItem]
     let alternateNames: [String]
-    let key, name: String
+    let name: String
     let title: String?
     let wikipedia: String?
-    let sourceRecords: [String]
+    let sourceRecords: [String]?
     let fullerName: String?
     let birthDate: String?
     let bio: StringValue
@@ -55,8 +56,8 @@ public struct AuthorSearch: Codable {
 }
 
 // MARK: - Doc
-public struct AuthorSearchResult: Codable {
-    let key: String
+public struct AuthorSearchResult: OpenLibraryObject {
+    public let key: OpenLibraryKey
     let name: String
     let birthDate: String?
     let deathDate: String?

@@ -8,8 +8,8 @@
 import Foundation
 
 // MARK: - Profile
-public struct Profile: Codable {
-    let key: String
+public struct Profile: OpenLibraryObject {
+    public let key: OpenLibraryKey
     let displayname: String
     let latestRevision, revision: Int
     let created, lastModified: DateValue

@@ -27,7 +27,7 @@ public struct ListsAPI {
         })
     }
 
-    public func listFor(subject: ListSeedType, id: String) async throws -> [List] {
+    public func listFor(subject: ListSeedType, id: OpenLibraryID) async throws -> [List] {
         return try await withCheckedThrowingContinuation({ continuation in
             api.request(path: "/\(subject.rawValue)/\(id)/lists.json", type: Lists.self, completion: { result in
                 switch result {
@@ -40,7 +40,7 @@ public struct ListsAPI {
         })
     }
 
-    public func single(user: String, id: String) async throws -> SingleList {
+    public func single(user: String, id: OpenLibraryID) async throws -> SingleList {
         return try await withCheckedThrowingContinuation({ continuation in
             api.request(path: "/people/\(user)/lists/\(id).json", type: SingleList.self, completion: { result in
                 continuation.resume(with: result)

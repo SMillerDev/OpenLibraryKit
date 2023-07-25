@@ -30,7 +30,7 @@ public struct MyBooksAPI {
         return try await self.callApi(user: user, path: "already-read")
     }
 
-    public func callApi(user: String, path: String) async throws -> [ReadingLogEntry] {
+    fileprivate func callApi(user: String, path: String) async throws -> [ReadingLogEntry] {
         try await withCheckedThrowingContinuation({ continuation in
             api.request(path: "/people/\(user)/books/\(path).json", type: ReadingLog.self, completion: { result in
                 switch result {

@@ -15,21 +15,21 @@ struct AuthorWorks: Codable {
 }
 
 // MARK: - Entry
-public struct AuthorWork: Codable {
+public struct AuthorWork: OpenLibraryObject {
     let type: TypeClass
     let title: String
     let authors: [AuthorItem]
-    let key: String
+    public let key: OpenLibraryKey
     let latestRevision, revision: Int
     let created, lastModified: DateValue
     let covers: [Int]?
-    let description: Description?
+    let description: StringOrDict?
     let subjectPlaces: [String]?
     let firstPublishDate: String?
     let subjectPeople, subjectTimes, subjects: [String]?
     let firstSentence: StringValue?
     let excerpts: [Excerpt]?
-    let links: [Link]?
+    let links: [LinkItem]?
     let location: String?
     let deweyNumber, lcClassifications: [String]?
 
@@ -69,27 +69,27 @@ struct AuthorItem: Codable {
 }
 
 // MARK: - Excerpt
-struct Excerpt: Codable {
-    let excerpt: String
-    let comment: String?
-    let author: TypeClass?
+public struct Excerpt: Codable {
+    public let excerpt: String
+    public let comment: String?
+    public let author: TypeClass?
 }
 
-enum Description: Codable {
-    case created(StringValue)
+public enum StringOrDict: Codable {
+    case stringObj(StringValue)
     case string(String)
 
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let value = try? container.decode(String.self) {
             self = .string(value)
             return
         }
         if let value = try? container.decode(StringValue.self) {
-            self = .created(value)
+            self = .stringObj(value)
             return
         }
-        throw DecodingError.typeMismatch(Description.self,
+        throw DecodingError.typeMismatch(StringOrDict.self,
                                          DecodingError.Context(
                                             codingPath: decoder.codingPath,
                                             debugDescription: "Wrong type for Description"
@@ -97,10 +97,10 @@ enum Description: Codable {
         )
     }
 
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
-        case .created(let value):
+        case .stringObj(let value):
             try container.encode(value)
         case .string(let value):
             try container.encode(value)

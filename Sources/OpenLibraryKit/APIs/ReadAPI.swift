@@ -14,7 +14,7 @@ public struct ReadAPI {
         self.api = api
     }
 
-    public func fetch(id: String, type: ReadableType) async throws -> ReadingResults {
+    public func fetch(id: OpenLibraryID, type: ReadableType) async throws -> ReadingResults {
         return try await withCheckedThrowingContinuation({ continuation in
             api.request(path: "/api/volumes/brief/\(type.rawValue)/\(id).json",
                         type: ReadingResults.self,

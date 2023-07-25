@@ -9,10 +9,10 @@ import Foundation
 
 struct Api {
 
-    let decoder: JSONDecoder
+    let decoder: JSONDecoder = JSONDecoder()
+    let session: URLSession = URLSession(configuration: .default)
 
     init() {
-        decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601WithFractionalSeconds
     }
 
@@ -46,7 +46,7 @@ struct Api {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = data
 
-        URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+        session.dataTask(with: request, completionHandler: { data, response, error in
             if let error = error {
                 completion(.failure(error))
                 return

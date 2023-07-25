@@ -32,7 +32,7 @@ public struct ReadingLogEntry: Codable {
 }
 
 // MARK: - Work
-public struct ReadingLogWork: Codable {
+public struct ReadingLogWork: OpenLibraryObject {
     public let title: String
     public let authorNames: [String]
     public let firstPublishYear: Int
@@ -40,7 +40,7 @@ public struct ReadingLogWork: Codable {
     public let coverEditionKey: String?
     public let authorKeys: [String]
 
-    public let key: String
+    public let key: OpenLibraryKey
     let lendingEditionS: String?
     let editionKey: [String]
 

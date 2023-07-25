@@ -8,25 +8,26 @@
 import Foundation
 
 // MARK: - Work
-public struct Work: Codable {
-    let description: String?
-    let links: [Link] = []
-    let title: String
-    let covers: [Int]
-    let firstSentence: StringValue?
-    let subjectPlaces: [String] = []
-    let firstPublishDate: String?
-    let subjectPeople: [String] = []
-    let key: String
-    let authors: [WorkAuthor]
-    let excerpts: [Excerpt]
-    let subjects: [String]
-    let location: String
-    let latestRevision, revision: Int
-    let created, lastModified: DateValue
+public struct Work: OpenLibraryObject {
+    public let bookDescription: StringOrDict?
+    public let links: [LinkItem]?
+    public let title: String
+    public let covers: [Int]
+    public let firstSentence: StringValue?
+    public let subjectPlaces: [String]?
+    public let firstPublishDate: String?
+    public let subjectPeople: [String]?
+    public let key: OpenLibraryKey
+    public let authors: [WorkAuthor]
+    public let excerpts: [Excerpt]?
+    public let subjects: [String]
+    public let location: String?
+    public let latestRevision, revision: Int
+    public let created, lastModified: DateValue
 
     enum CodingKeys: String, CodingKey {
-        case description, links, title, covers
+        case links, title, covers
+        case bookDescription = "description"
         case firstSentence = "first_sentence"
         case subjectPlaces = "subject_places"
         case firstPublishDate = "first_publish_date"
@@ -36,48 +37,52 @@ public struct Work: Codable {
         case revision, created
         case lastModified = "last_modified"
     }
+
+    public func getImage(size: String, useDefault: Bool) -> URL? {
+        return URL(string: "https://covers.openlibrary.org/b/id/\(self.covers.first ?? 0)-\(size).jpg?default=\(useDefault ? "true" : "false")")
+    }
 }
 
 // MARK: - Author
-struct WorkAuthor: Codable {
+public struct WorkAuthor: Codable {
     let author: TypeClass
 }
 
 // MARK: - Edition
-public struct Edition: Codable {
-    let notes: String?
-    let title: String
-    let subtitle: String?
-    let authors: [TypeClass]
-    let publishDate: String
-    let translatedFrom: [TypeClass]?
-    let covers: [Int]
-    let contributions: [String]?
-    let languages: [TypeClass]
-    let sourceRecords: [String]
-    let workTitles: [String]?
-    let translationOf: String?
-    let editionName: String
-    let subjects: [String]?
-    let publishCountry: String?
-    let byStatement: String?
-    let type: TypeClass
-    let otherTitles: [String]?
-    let publishers: [String]
-    let physicalFormat: String
-    let publishPlaces: [String]
-    let pagination, copyrightDate: String
-    let subjectTimes: [String]?
-    let key: String
-    let numberOfPages: Int
+public struct Edition: OpenLibraryObject {
+    public let notes: StringOrDict?
+    public let title: String
+    public let subtitle: String?
+    public let authors: [TypeClass]?
+    public let publishDate: String
+    public let translatedFrom: [TypeClass]?
+    public let covers: [Int]
+    public let contributions: [String]?
+    public let languages: [TypeClass]?
+    public let sourceRecords: [String]?
+    public let workTitles: [String]?
+    public let translationOf: String?
+    public let editionName: String?
+    public let subjects: [String]?
+    public let publishCountry: String?
+    public let byStatement: String?
+    public let otherTitles: [String]?
+    public let publishers: [String]
+    public let physicalFormat: String?
+    public let publishPlaces: [String]?
+    public let pagination: String?
+    public let copyrightDate: String?
+    public let subjectTimes: [String]?
+    public let key: OpenLibraryKey
+    public let numberOfPages: Int
     let works: [TypeClass]
-    let identifiers: Identifiers
-    let ocaid: String
-    let isbn10, isbn13, oclcNumbers: [String]
-    let classifications: Classifications
-    let deweyDecimalClass: [String]?
-    let latestRevision, revision: Int
-    let created, lastModified: DateValue
+    public let identifiers: Identifiers?
+    public let ocaid: String?
+    public let isbn10, isbn13, oclcNumbers: [String]?
+    public let classifications: Classifications?
+    public let deweyDecimalClass: [String]?
+    public let latestRevision, revision: Int
+    public let created, lastModified: DateValue
 
     enum CodingKeys: String, CodingKey {
         case notes, title, subtitle, authors
@@ -91,7 +96,6 @@ public struct Edition: Codable {
         case subjects
         case publishCountry = "publish_country"
         case byStatement = "by_statement"
-        case type
         case otherTitles = "other_titles"
         case publishers
         case physicalFormat = "physical_format"
@@ -111,10 +115,14 @@ public struct Edition: Codable {
         case revision, created
         case lastModified = "last_modified"
     }
+
+    public func getImage(size: String, useDefault: Bool) -> URL? {
+        return URL(string: "https://covers.openlibrary.org/b/id/\(self.covers.first ?? 0)-\(size).jpg?default=\(useDefault ? "true" : "false")")
+    }
 }
 
 // MARK: - Identifiers
-struct Identifiers: Codable {
+public struct Identifiers: Codable {
     let amazon, betterWorldBooks, goodreads, wikidata: [String]?
 
     enum CodingKeys: String, CodingKey {
@@ -125,37 +133,39 @@ struct Identifiers: Codable {
 }
 
 // MARK: - TableOfContent
-struct TableOfContent: Codable {
+public struct TableOfContent: Codable {
     let level: Int
     let label, title, pagenum: String
 }
 
 // MARK: - Classifications
-struct Classifications: Codable {
+public struct Classifications: Codable {
 }
 
 // MARK: - Edition
-struct Editions: Codable {
+public struct Editions: Codable {
     let size: Int
     let entries: [EditionsEntry]
 }
 
 // MARK: - Contributor
-struct Contributor: Codable {
+public struct Contributor: Codable {
     let role, name: String
 }
 
 // MARK: - EditionsEntry
-public struct EditionsEntry: Codable {
+public struct EditionsEntry: OpenLibraryObject {
     let title: String
     let authors: [TypeClass]?
     let publishDate: String?
-    let sourceRecords, publishers, isbn10, isbn13: [String]?
+    let sourceRecords: [String]?
+    let publishers: [String]?
+    let isbn10, isbn13: [String]?
     let physicalFormat, fullTitle, subtitle: String?
-    let notes: Description?
+    let notes: StringOrDict?
     let covers: [Int]?
     let works: [TypeClass]
-    let key: String
+    public let key: OpenLibraryKey
     let latestRevision, revision: Int
     let created, lastModified: DateValue
     let identifiers: Identifiers?
@@ -171,7 +181,7 @@ public struct EditionsEntry: Codable {
     let subjects: [String]?
     let weight: String?
     let otherTitles, publishPlaces: [String]?
-    let description: Description?
+    let description: StringOrDict?
     let lcClassifications, contributions, workTitles, deweyDecimalClass: [String]?
     let subjectPeople: [String]?
     let publishCountry, byStatement: String?

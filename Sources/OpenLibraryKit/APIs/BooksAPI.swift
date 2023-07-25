@@ -14,7 +14,7 @@ public struct BooksAPI {
         self.api = api
     }
 
-    public func work(id: String) async throws -> Work {
+    public func work(id: OpenLibraryID) async throws -> Work {
         return try await withCheckedThrowingContinuation({ continuation in
             api.request(path: "/works/\(id).json", type: Work.self, completion: { result in
                 continuation.resume(with: result)
@@ -30,7 +30,7 @@ public struct BooksAPI {
         })
     }
 
-    public func edition(id: String) async throws -> Edition {
+    public func edition(id: OpenLibraryID) async throws -> Edition {
         return try await withCheckedThrowingContinuation({ continuation in
             api.request(path: "/books/\(id).json", type: Edition.self, completion: { result in
                 continuation.resume(with: result)
@@ -38,7 +38,7 @@ public struct BooksAPI {
         })
     }
 
-    public func editions(id: String) async throws -> [EditionsEntry] {
+    public func editions(id: OpenLibraryID) async throws -> [EditionsEntry] {
         return try await withCheckedThrowingContinuation({ continuation in
             api.request(path: "/works/\(id)/editions.json?limit=1000", type: Editions.self, completion: { result in
                 switch result {
@@ -51,7 +51,7 @@ public struct BooksAPI {
         })
     }
 
-    public func ratings(id: String) async throws -> BookRating {
+    public func ratings(id: OpenLibraryID) async throws -> BookRating {
         return try await withCheckedThrowingContinuation({ continuation in
             api.request(path: "/works/\(id)/ratings.json", type: BookRating.self, completion: { result in
                 continuation.resume(with: result)
@@ -59,7 +59,7 @@ public struct BooksAPI {
         })
     }
 
-    public func setRating(id: String, rating: Int) async throws -> BookRating {
+    public func setRating(id: OpenLibraryID, rating: Int) async throws -> BookRating {
         if rating > 5 || rating < 1 {
             throw HttpError.clientError("Invalid rating")
         }
@@ -77,7 +77,7 @@ public struct BooksAPI {
         })
     }
 
-    public func shelves(id: String) async throws -> BookShelves {
+    public func shelves(id: OpenLibraryID) async throws -> BookShelves {
         return try await withCheckedThrowingContinuation({ continuation in
             api.request(path: "/works/\(id)/bookshelves.json", type: BookShelves.self, completion: { result in
                 continuation.resume(with: result)
@@ -85,15 +85,15 @@ public struct BooksAPI {
         })
     }
 
-    public func setShelve(id: String, shelf: BookShelveId) async throws {
+    public func setShelve(id: OpenLibraryID, shelf: BookShelveId) async throws {
         throw HttpError.notImplemented
     }
 
-    public func removeShelve(id: String, shelf: BookShelveId) async throws {
+    public func removeShelve(id: OpenLibraryID, shelf: BookShelveId) async throws {
         throw HttpError.notImplemented
     }
 
-    public func image(id: String) async throws -> Cover {
+    public func image(id: OpenLibraryID) async throws -> Cover {
         return try await withCheckedThrowingContinuation({ continuation in
             api.request(path: "/b/olid/\(id).json", prefix: "covers.", type: Cover.self, completion: { result in
                 continuation.resume(with: result)

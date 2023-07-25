@@ -15,7 +15,7 @@ public struct SearchContentAPI {
     }
 
     public func search(_ query: String,
-                       itemId: String,
+                       itemId: OpenLibraryID,
                        path: String,
                        dataNode: String = "ia800204") async throws -> ContentSearchResult {
         let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""

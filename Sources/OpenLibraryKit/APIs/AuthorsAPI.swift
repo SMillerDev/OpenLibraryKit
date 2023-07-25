@@ -14,7 +14,7 @@ public struct AuthorsAPI {
         self.api = api
     }
 
-    public func author(id: String) async throws -> Author {
+    public func author(id: OpenLibraryID) async throws -> Author {
         try await withCheckedThrowingContinuation({ continuation in
             api.request(path: "/authors/\(id).json", type: Author.self, completion: { result in
                 continuation.resume(with: result)
@@ -22,7 +22,7 @@ public struct AuthorsAPI {
         })
     }
 
-    public func works(id: String) async throws -> [AuthorWork] {
+    public func works(id: OpenLibraryID) async throws -> [AuthorWork] {
         try await withCheckedThrowingContinuation({ continuation in
             api.request(path: "/authors/\(id)/works.json", type: AuthorWorks.self, completion: { result in
                 switch result {
@@ -49,7 +49,7 @@ public struct AuthorsAPI {
         })
     }
 
-    public func image(id: String) async throws -> Cover {
+    public func image(id: OpenLibraryID) async throws -> Cover {
         try await withCheckedThrowingContinuation({ continuation in
             api.request(path: "/a/olid/\(id).json", prefix: "covers.", type: Cover.self, completion: { result in
                 continuation.resume(with: result)

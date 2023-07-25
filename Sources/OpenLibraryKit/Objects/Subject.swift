@@ -7,12 +7,12 @@
 
 import Foundation
 
-public struct Subject: Codable {
-    let key: String
-    let name: String
+public struct Subject: OpenLibraryObject {
+    public let key: OpenLibraryKey
+    public let name: String
     let type: String?
-    let workCount: Int
-    let works: [SubjectWork]
+    public let workCount: Int
+    public let works: [SubjectWork]
 
     enum CodingKeys: String, CodingKey {
         case name, key, works
@@ -21,17 +21,17 @@ public struct Subject: Codable {
     }
 }
 
-public struct SubjectWork: Codable {
-    let key: String
-    let title: String
-    let fullText: Bool
-    let lending: Bool
-    let editionCount: Int
-    let coverId: Int
-    let coverEdition: String
-    let authors: [AuthorValue]
-    let subject: [String]
-    let iaCollection: [String]
+public struct SubjectWork: OpenLibraryObject {
+    public let key: OpenLibraryKey
+    public let title: String
+    public let fullText: Bool
+    public let lending: Bool
+    public let editionCount: Int
+    public let coverId: Int
+    public let coverEdition: String
+    public let authors: [AuthorValue]
+    public let subject: [String]
+    public let iaCollection: [String]
 
     enum CodingKeys: String, CodingKey {
         case title, key, authors, subject

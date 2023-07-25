@@ -7,15 +7,30 @@
 
 import Foundation
 
+public typealias OpenLibraryID = String
+public typealias OpenLibraryKey = String
+
 // MARK: - Link
-struct Link: Codable {
-    let title: String?
-    let url: String
+public struct LinkItem: Codable {
+    public let title: String?
+    public let url: URL
+}
+
+public protocol OpenLibraryObject: Codable {
+    var key: OpenLibraryKey { get }
+}
+
+extension OpenLibraryObject {
+    public var olid: OpenLibraryID {
+        get {
+            return String(key.split(separator: "/").last!)
+        }
+    }
 }
 
 // MARK: - TypeClass
-struct TypeClass: Codable {
-    let key: String
+public struct TypeClass: OpenLibraryObject {
+    public let key: OpenLibraryKey
 }
 
 enum TypeEnum: String, Codable {
@@ -24,17 +39,17 @@ enum TypeEnum: String, Codable {
 }
 
 // MARK: - Permission
-struct DateValue: Codable {
+public struct DateValue: Codable {
     let type: TypeEnum
     let value: Date?
 }
 
-struct StringValue: Codable {
-    let type: String
-    let value: String?
+public struct StringValue: Codable {
+    public let type: String
+    public let value: String?
 }
 
-struct AuthorValue: Codable {
-    let key: String
+public struct AuthorValue: OpenLibraryObject {
+    public let key: OpenLibraryKey
     let name: String?
 }

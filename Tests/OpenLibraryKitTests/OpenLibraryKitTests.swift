@@ -2,141 +2,147 @@ import XCTest
 @testable import OpenLibraryKit
 
 final class OpenLibraryKitTests: XCTestCase {
+    let kit: OpenLibraryKit = OpenLibraryKit()
+
     func testMyWantedBooks() async throws {
-        let list = try await OpenLibraryKit().myBooks().wanted(user: "smillernl")
+        let list = try await kit.myBooks.wanted(user: "smillernl")
         XCTAssertFalse(list.isEmpty)
     }
 
     func testMyReadingBooks() async throws {
-        let list = try await OpenLibraryKit().myBooks().reading(user: "smillernl")
+        let list = try await kit.myBooks.reading(user: "smillernl")
         XCTAssertFalse(list.isEmpty)
     }
 
     func testMyReadBooks() async throws {
-        let list = try await OpenLibraryKit().myBooks().read(user: "smillernl")
+        let list = try await kit.myBooks.read(user: "smillernl")
         XCTAssertFalse(list.isEmpty)
     }
 
     func testProfile() async throws {
-        let profile = try await OpenLibraryKit().profile().get(user: "smillernl")
+        let profile = try await kit.profile.get(user: "smillernl")
         XCTAssertFalse(profile.displayname.isEmpty)
     }
 
     func testAuthor() async throws {
-        let author = try await OpenLibraryKit().author().author(id: "OL272947A")
+        let author = try await kit.author.author(id: "OL272947A")
         XCTAssertFalse(author.alternateNames.isEmpty)
     }
 
     func testAuthorWorks() async throws {
-        let list = try await OpenLibraryKit().author().works(id: "OL272947A")
+        let list = try await kit.author.works(id: "OL272947A")
         XCTAssertFalse(list.isEmpty)
     }
 
     func testAuthorSearch() async throws {
-        let list = try await OpenLibraryKit().author().search("Douglas Adams")
+        let list = try await kit.author.search("Douglas Adams")
         XCTAssertFalse(list.isEmpty)
         XCTAssertEqual(list.first?.key, "OL272947A")
     }
 
     func testAuthorCover() async throws {
-        let cover = try await OpenLibraryKit().author().image(id: "OL272947A")
+        let cover = try await kit.author.image(id: "OL272947A")
         XCTAssertEqual(cover.olid, "OL272947A")
     }
 
     func testBookWork() async throws {
-        let item = try await OpenLibraryKit().books().work(id: "OL2163649W")
+        let item = try await kit.books.work(id: "OL2163649W")
         XCTAssertEqual(item.key, "/works/OL2163649W")
+        XCTAssertEqual(item.olid, "OL2163649W")
     }
 
     func testBookEditionByISBN() async throws {
-        let item = try await OpenLibraryKit().books().edition(isbn: "7532754685")
+        let item = try await kit.books.edition(isbn: "7532754685")
         XCTAssertEqual(item.key, "/books/OL27273349M")
+        XCTAssertEqual(item.olid, "OL27273349M")
     }
 
     func testBookEditions() async throws {
-        let list = try await OpenLibraryKit().books().editions(id: "OL2163649W")
+        let list = try await kit.books.editions(id: "OL2163649W")
         XCTAssertFalse(list.isEmpty)
     }
 
     func testBookEdition() async throws {
-        let item = try await OpenLibraryKit().books().edition(id: "OL32832269M")
+        let item = try await kit.books.edition(id: "OL32832269M")
         XCTAssertEqual(item.key, "/books/OL32832269M")
+        XCTAssertEqual(item.olid, "OL32832269M")
     }
 
     func testBookRating() async throws {
-        let item = try await OpenLibraryKit().books().ratings(id: "OL2163649W")
-        XCTAssertGreaterThan(item.summary.average, 1.0)
+        let item = try await kit.books.ratings(id: "OL2163649W")
+        XCTAssertNotNil(item.summary?.average)
+        XCTAssertGreaterThan(item.summary?.average ?? 0.0, 1.0)
     }
 
     func testBookShelves() async throws {
-        let item = try await OpenLibraryKit().books().shelves(id: "OL2163649W")
+        let item = try await kit.books.shelves(id: "OL2163649W")
         XCTAssertGreaterThan(item.counts.alreadyRead, 2)
     }
 
     func testBookCover() async throws {
-        let item = try await OpenLibraryKit().books().image(id: "OL27273349M")
+        let item = try await kit.books.image(id: "OL27273349M")
         XCTAssertEqual(item.olid, "OL27273349M")
     }
 
     func testBookCoverISBN() async throws {
-        let item = try await OpenLibraryKit().books().image(isbn: "7532754685")
+        let item = try await kit.books.image(isbn: "7532754685")
         XCTAssertEqual(item.olid, "OL27273349M")
     }
 
     func testLogin() async throws {
-        let login = try await OpenLibraryKit().auth().login(user: "sean", secret: "test")
+        let login = try await kit.auth.login(user: "sean", secret: "test")
         XCTAssertEqual(login, "sean")
     }
 
     func testListsForUser() async throws {
-        let list = try await OpenLibraryKit().lists().listFor(user: "george08")
+        let list = try await kit.lists.listFor(user: "george08")
         XCTAssertFalse(list.isEmpty)
         XCTAssertEqual(list.first?.name, "Museum in a Box")
     }
 
     func testListsForSubject() async throws {
-        let list = try await OpenLibraryKit().lists().listFor(subject: .works, id: "OL8721462W")
+        let list = try await kit.lists.listFor(subject: .works, id: "OL8721462W")
         XCTAssertFalse(list.isEmpty)
         XCTAssertEqual(list.first?.name, "picks")
     }
 
     func testList() async throws {
-        let list = try await OpenLibraryKit().lists().single(user: "george08", id: "OL97L")
+        let list = try await kit.lists.single(user: "george08", id: "OL97L")
         XCTAssertEqual(list.name, "Time Travel")
     }
 
     func testListsSearch() async throws {
-        let list = try await OpenLibraryKit().lists().search("book")
+        let list = try await kit.lists.search("book")
         XCTAssertFalse(list.isEmpty)
         XCTAssertEqual(list.first?.name, "book")
     }
 
     func testRecentChanges() async throws {
-        let list = try await OpenLibraryKit().recentChanges().changes(type: .addBook)
+        let list = try await kit.recentChanges.changes(type: .addBook)
         XCTAssertFalse(list.isEmpty)
         XCTAssertEqual(list.first?.kind, ChangesType.addBook.rawValue)
     }
 
     func testSubject() async throws {
-        let item = try await OpenLibraryKit().subjects().subject("love")
+        let item = try await kit.subjects.subject("love")
         XCTAssertEqual(item.name, "love")
     }
 
     func testRead() async throws {
-        let item = try await OpenLibraryKit().read().fetch(id: "7532754685", type: .isbn)
+        let item = try await kit.read.fetch(id: "7532754685", type: .isbn)
         XCTAssertFalse(item.records.isEmpty)
         XCTAssertFalse(item.items.isEmpty)
     }
 
     func testSearch() async throws {
-        let list = try await OpenLibraryKit().search().search("Lord of the Rings")
+        let list = try await kit.search.search("Lord of the Rings")
         XCTAssertFalse(list.isEmpty)
     }
 
     func testSearchContent() async throws {
         throw XCTSkip("Not supported yet!")
-        let search = try await OpenLibraryKit().searchContent().search("Test", itemId: "a", path: "/b")
-        XCTAssertEqual(search.ia, "love")
+        let search = try await OpenLibraryKit().searchContent.search("Test", itemId: "a", path: "/b")
+        XCTAssertEqual(search.iaId, "love")
     }
 
 }
